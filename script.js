@@ -1,19 +1,18 @@
 function increaseComplementAmount({ complement }) {
-	// --- INÍCIO DA LÓGICA PERSONALIZADA ---
-	// Pega o elemento H2 do título do modal de complementos.
+	console.log("--- FUNÇÃO increaseComplementAmount EXECUTADA ---");
+
 	const tituloElemento = document.getElementById('complement-step-title');
-	const tituloAtual = tituloElemento ? tituloElemento.innerText : '';
+	// Usamos .trim() para remover espaços em branco no início ou fim do texto
+	const tituloAtual = tituloElemento ? tituloElemento.innerText.trim() : '';
+	console.log("Título do modal lido: ", `"${tituloAtual}"`);
 
-	// Lista de títulos que devem ter o comportamento normal (de 1 em 1).
 	const titulosExcluidos = ["Escolha 10 salgados", "Escolha o sabor"];
+	let step = 5;
 
-	let step = 5; // O passo padrão é 5.
-
-	// Se o título atual estiver na lista de exclusão, o passo muda para 1.
 	if (titulosExcluidos.includes(tituloAtual)) {
 		step = 1;
 	}
-	// --- FIM DA LÓGICA PERSONALIZADA ---
+	console.log("Passo (step) definido para: ", step);
 
 	const { id: complementId, title: complementTitle, price: complementPrice } = complement;
 	const { selectedComplements, currentPage } = complementStepState;
@@ -38,10 +37,11 @@ function increaseComplementAmount({ complement }) {
 		.find(complement => complement.id === complementId);
 
 	if (!alreadyChoosedComplement) {
+		console.log("Complemento novo. Definindo quantidade inicial como:", step);
 		currentSelectedComplements.complements.push({
 			id: complementId,
 			price: complementPrice,
-			amount: step, // Usa a variável 'step'
+			amount: step,
 			title: complementTitle,
 		})
 		if (advancedBehavior) {
@@ -50,50 +50,46 @@ function increaseComplementAmount({ complement }) {
 			complementInfo.classList.remove('d-none');
 		}
 	} else {
-		alreadyChoosedComplement.amount = alreadyChoosedComplement.amount + step; // Usa a variável 'step'
+		console.log("Complemento existente. Quantidade anterior:", alreadyChoosedComplement.amount);
+		alreadyChoosedComplement.amount = alreadyChoosedComplement.amount + step;
+		console.log("Nova quantidade:", alreadyChoosedComplement.amount);
 	}
 
 	changeComplementInputAmountValue({
 		inputId: 'complement-' + complementId,
 		value: alreadyChoosedComplement ? alreadyChoosedComplement.amount : step,
-	})
+	});
 
-	if (complement.supply_control) {
-		increaseComplementSupplyStore({ complementId: complement.id })
-		const productComplementWithSupply = complementHasSupply({
-			complement,
-			amount: alreadyChoosedComplement ? alreadyChoosedComplement.amount : 1,
-		});
-		if (!productComplementWithSupply) {
-			showSnackbar({ message: 'Complemento sem estoque' })
-			decreaseComplementAmount({ complement });
-			return;
-		}
-	}
-	isValidToProgress()
+	console.log("--- FUNÇÃO increaseComplementAmount FINALIZADA ---");
+	isValidToProgress();
 }
 
 function decreaseComplementAmount({ complement }) {
-	// --- INÍCIO DA LÓGICA PERSONALIZADA ---
+	console.log("--- FUNÇÃO decreaseComplementAmount EXECUTADA ---");
+
 	const tituloElemento = document.getElementById('complement-step-title');
-	const tituloAtual = tituloElemento ? tituloElemento.innerText : '';
+	const tituloAtual = tituloElemento ? tituloElemento.innerText.trim() : '';
+	console.log("Título do modal lido: ", `"${tituloAtual}"`);
+
 	const titulosExcluidos = ["Escolha 10 salgados", "Escolha o sabor"];
 	let step = 5;
 
 	if (titulosExcluidos.includes(tituloAtual)) {
 		step = 1;
 	}
-	// --- FIM DA LÓGICA PERSONALIZADA ---
+	console.log("Passo (step) definido para: ", step);
 
 	const { id: complementId } = complement;
 	const currentSelectedComplements = getSelectedComplementsOfCurrentPage();
-	if (!currentSelectedComplements) return
+	if (!currentSelectedComplements) return;
 
 	const alreadyChoosedComplement = currentSelectedComplements.complements
 		.find(complement => complement.id === complementId);
 	if (!alreadyChoosedComplement) return;
-
-	alreadyChoosedComplement.amount = alreadyChoosedComplement.amount - step; // Usa a variável 'step'
+	
+	console.log("Diminuindo complemento. Quantidade anterior:", alreadyChoosedComplement.amount);
+	alreadyChoosedComplement.amount = alreadyChoosedComplement.amount - step;
+	console.log("Nova quantidade:", alreadyChoosedComplement.amount);
 
 	if (alreadyChoosedComplement.amount <= 0) {
 		currentSelectedComplements.complements = currentSelectedComplements.complements
@@ -110,11 +106,8 @@ function decreaseComplementAmount({ complement }) {
 	changeComplementInputAmountValue({
 		inputId: 'complement-' + complementId,
 		value: finalAmount,
-	})
-
-	if (complement.supply_control) {
-		decreaseComplementSupplyStore({ complementId: complementId, amount: step }); // Usa a variável 'step'
-	}
-
-	isValidToProgress()
+	});
+	
+	console.log("--- FUNÇÃO decreaseComplementAmount FINALIZADA ---");
+	isValidToProgress();
 }
