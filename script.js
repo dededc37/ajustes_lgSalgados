@@ -1,10 +1,16 @@
 function increaseComplementAmount({ complement }) {
 	// --- INÍCIO DA LÓGICA PERSONALIZADA ---
-	const produtosExcluidos = [1851076, 1745450, 1745451];
-	let step = 5; // O passo padrão é 5
+	// Pega o elemento H2 do título do modal de complementos.
+	const tituloElemento = document.getElementById('complement-step-title');
+	const tituloAtual = tituloElemento ? tituloElemento.innerText : '';
 
-	// Se o produto atual estiver na lista de exclusão, o passo muda para 1
-	if (produtosExcluidos.includes(complementStepState.product.id)) {
+	// Lista de títulos que devem ter o comportamento normal (de 1 em 1).
+	const titulosExcluidos = ["Escolha 10 salgados", "Escolha o sabor"];
+
+	let step = 5; // O passo padrão é 5.
+
+	// Se o título atual estiver na lista de exclusão, o passo muda para 1.
+	if (titulosExcluidos.includes(tituloAtual)) {
 		step = 1;
 	}
 	// --- FIM DA LÓGICA PERSONALIZADA ---
@@ -69,11 +75,12 @@ function increaseComplementAmount({ complement }) {
 
 function decreaseComplementAmount({ complement }) {
 	// --- INÍCIO DA LÓGICA PERSONALIZADA ---
-	const produtosExcluidos = [1851076, 1745450, 1745451];
-	let step = 5; // O passo padrão é 5
+	const tituloElemento = document.getElementById('complement-step-title');
+	const tituloAtual = tituloElemento ? tituloElemento.innerText : '';
+	const titulosExcluidos = ["Escolha 10 salgados", "Escolha o sabor"];
+	let step = 5;
 
-	// Se o produto atual estiver na lista de exclusão, o passo muda para 1
-	if (produtosExcluidos.includes(complementStepState.product.id)) {
+	if (titulosExcluidos.includes(tituloAtual)) {
 		step = 1;
 	}
 	// --- FIM DA LÓGICA PERSONALIZADA ---
